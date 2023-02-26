@@ -4,7 +4,7 @@ Visualizes 2-variable convex(?) optimization problems as 3D surfaces
 Specify objective and constraints in their standard (convex optimization problem) forms
 """
 objective = "x**2 + 3*x*y + 9*y**2 + 2*x - 5*y"
-inequality_constraints = ""
+inequality_constraints = "x**2 - 10"
 equality_constraints = ""
 
 x_limits = "-10,10"
@@ -13,6 +13,11 @@ n_points = "50"
 
 
 from matplotlib import pyplot
+# pyplot.rc('text', usetex=True)
+# pyplot.rc('font', **{'family': 'serif', 'serif': ['cm'],
+#                      'size' : 10})
+pyplot.rc('font', **{'size' : 10})
+
 from matplotlib.ticker import LinearLocator
 from mpl_toolkits.mplot3d import Axes3D
 
@@ -63,6 +68,7 @@ class Surface:
         axis.plot_surface(self.x_vals, self.y_vals, self.z_vals, color='gray', alpha=0.8)
         axis.zaxis.set_major_locator(LinearLocator(5))
         axis.zaxis.set_major_formatter('{x:.00f}')
+        axis.set_title("Objective Function (restricted to the feasible set)")
 
         x, y = sympy.symbols('x y')
         if self.inequality_constraints:
@@ -72,8 +78,9 @@ class Surface:
             sympy.plot_implicit(sympy.And(*inequalities), 
                                 (x, float(x_limits.split(",")[0]), float(x_limits.split(",")[1])),  
                                 (y, float(y_limits.split(",")[0]), float(y_limits.split(",")[1])),
-                                line_color='maroon', xlabel="", ylabel="", axis=axis)
+                                line_color='maroon', xlabel="", ylabel="", title="Feasible Set")
 
+        pyplot.set_xlim()
         pyplot.show()
 
 
